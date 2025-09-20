@@ -99,7 +99,7 @@ const Index = () => {
 		 // Dummy login/signup handlers (replace with backend API call)
 		 const handleLogin = async (email, password) => {
 			try {
-				const response = await fetch('http://localhost:5000/api/users/login', {
+				const response = await fetch('/api/users/login', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const Index = () => {
 
 		const handleSignup = async (name, email, password) => {
 			try {
-				const response = await fetch('http://localhost:5000/api/users/signup', {
+				const response = await fetch('/api/users/signup', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

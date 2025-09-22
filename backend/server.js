@@ -8,6 +8,7 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import seedRoutes from './routes/seedRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -23,8 +24,12 @@ app.use('/api/search', searchRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/seed', seedRoutes);
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../dist')));
+// Serve static files from the React app if present (in single-service deployments)
+const distPath = path.join(__dirname, '../dist');
+const hasDist = fs.existsSync(distPath);
+if (hasDist) {
+  app.use(express.static(distPath));
+}
 
 
 const PORT = process.env.PORT || 5000;
@@ -39,10 +44,13 @@ mongoose.connect(MONGO_URI, {
   console.error('MongoDB connection error:', err);
 });
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
+// Catch-all: if dist exists, return index.html (SPA). Otherwise, provide a basic API status.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  if (hasDist) {
+    res.sendFile(path.join(distPath, 'index.html'));
+  } else {
+    res.status(200).json({ status: 'ok', service: 'backend', note: 'Static frontend not bundled on this service.' });
+  }
 });
 
 

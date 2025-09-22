@@ -5,7 +5,10 @@ import TravelServices from '@/components/TravelServices'
 import FlightBookingForm from '@/components/FlightBookingForm'
 import HotelBookingForm from '@/components/HotelBookingForm'
 import HeroSection from '@/components/HeroSection'
+import { setCurrentUser } from '@/lib/auth'
 import { VillaHomeSearchBar } from '@/components/VillaHomeSearchBar'
+import { useNavigate } from 'react-router-dom'
+import { defaultHotelImage, defaultFlightImage } from '@/lib/assets'
 
 const flightOffers = [
 	{
@@ -26,6 +29,27 @@ const flightOffers = [
 		code: 'WEEKEND',
 		image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
 	},
+]
+
+const holidayPackages = [
+    {
+        name: 'Goa Beach Escape',
+        location: 'Goa, India',
+        description: '3N/4D • Beachside resort • Breakfast • Airport transfers',
+        image: 'https://images.unsplash.com/photo-1519821172141-b5d8a4d4b7df?auto=format&fit=crop&w=400&q=80',
+    },
+    {
+        name: 'Kerala Backwaters & Munnar',
+        location: 'Kerala, India',
+        description: '4N/5D • Houseboat cruise • Tea gardens • Guided sightseeing',
+        image: 'https://images.unsplash.com/photo-1542370285-b8eb8317691e?auto=format&fit=crop&w=400&q=80',
+    },
+    {
+        name: 'Jaipur Royal Getaway',
+        location: 'Jaipur, Rajasthan',
+        description: '2N/3D • Palace stay • City tour • Cultural evening',
+        image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
+    },
 ]
 
 const topHotels = [
@@ -91,10 +115,11 @@ const villasAndHomestays = [
 ]
 
 const Index = () => {
+     const navigate = useNavigate()
 	 const [activeService, setActiveService] = useState('Flights')
 	 const [showExplore, setShowExplore] = useState(false)
 	 const [showLogin, setShowLogin] = useState(false)
-	 const [user, setUser] = useState(null)
+	    const [user, setUser] = useState<{ id: string; email: string } | null>(null)
 
 		 // Dummy login/signup handlers (replace with backend API call)
 		 const handleLogin = async (email, password) => {
@@ -108,11 +133,13 @@ const Index = () => {
 				});
 				const data = await response.json();
 				if (response.ok) {
-					setUser({ email: data.email });
-					setShowLogin(false);
-				} else {
-					alert(data.message);
-				}
+                    const nextUser = { id: data.id, email: data.email, token: data.token };
+                    setUser(nextUser);
+                    setCurrentUser(nextUser);
+                    setShowLogin(false);
+                } else {
+                    alert(data.message);
+                }
 			} catch (error) {
 				console.error('Login failed:', error);
 				alert('Login failed. Please try again.');
@@ -130,7 +157,7 @@ const Index = () => {
 				});
 				const data = await response.json();
 				if (response.ok) {
-					setUser({ email: data.email });
+					setUser({ id: data.id, email: data.email });
 					setShowLogin(false);
 				} else {
 					alert(data.message);
@@ -143,13 +170,18 @@ const Index = () => {
 
 		return (
 					<div className="min-h-screen">
+						{/* Header with responsive login/logout */}
 						 <LoginModal
 							 isOpen={showLogin}
 							 onClose={() => setShowLogin(false)}
 							 onLogin={handleLogin}
 							 onSignup={handleSignup}
 						 />
-						 <TravelHeader onLoginClick={() => setShowLogin(true)} user={user} />
+						 <TravelHeader 
+							 onLoginClick={() => setShowLogin(true)} 
+							 onLogoutClick={() => { setUser(null); setCurrentUser(null); }} 
+							 user={user} 
+						/>
 						 <HeroSection />
 			<section className="bg-gradient-to-br from-background to-muted/30 py-8">
 				<div className="container mx-auto px-4">
@@ -158,6 +190,31 @@ const Index = () => {
 						{activeService === 'Flights' && <FlightBookingForm />}
 						{activeService === 'Hotels' && <HotelBookingForm />}
 						{activeService === 'Homestays & Villas' && <VillaHomeSearchBar />}
+							{activeService === 'Holiday Packages' && (
+								<div className="bg-card rounded-b-2xl border border-t-0 border-border p-6">
+									<h2 className="text-xl font-bold mb-4 text-primary">Popular Holiday Packages</h2>
+									<ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
+										{holidayPackages.map((pkg, idx) => (
+											<li key={idx} className="flex flex-col border rounded-lg overflow-hidden">
+												<img src={pkg.image} alt={pkg.name} className="w-full h-32 object-cover" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultHotelImage }} />
+												<div className="p-3 flex-1">
+													<div className="font-semibold">{pkg.name}</div>
+													<div className="text-xs text-muted-foreground">{pkg.location}</div>
+													<div className="text-sm mt-1">{pkg.description}</div>
+												</div>
+											</li>
+										))}
+									</ul>
+									<div className="mt-6 text-center">
+										<button
+											className="px-6 py-2 rounded bg-gradient-primary text-primary-foreground font-semibold shadow hover:bg-primary-hover transition"
+											onClick={() => navigate('/packages/results')}
+										>
+											Explore Packages
+										</button>
+									</div>
+								</div>
+							)}
 						{/* Explore More Section */}
 						{showExplore && (
 							<div className="mt-8">
@@ -171,15 +228,17 @@ const Index = () => {
 														src={offer.image}
 														alt={offer.title}
 														className="w-32 h-24 object-cover rounded-lg shadow"
+														loading="lazy"
+														onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultFlightImage }}
 													/>
-													<div className="flex-1 text-left">
-														<div className="font-semibold text-lg">{offer.title}</div>
-														<div className="text-muted-foreground mb-1">{offer.description}</div>
-														<span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs font-medium">
-															Use Code: {offer.code}
-														</span>
-													</div>
-												</li>
+												<div className="flex-1 text-left">
+													<div className="font-semibold text-lg">{offer.title}</div>
+													<div className="text-muted-foreground mb-1">{offer.description}</div>
+													<span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs font-medium">
+														Use Code: {offer.code}
+													</span>
+												</div>
+											</li>
 											))}
 										</ul>
 									</div>
@@ -194,16 +253,18 @@ const Index = () => {
 														src={hotel.image}
 														alt={hotel.name}
 														className="w-32 h-24 object-cover rounded-lg shadow"
+														loading="lazy"
+														onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultHotelImage }}
 													/>
-													<div className="flex-1 text-left">
-														<div className="font-semibold text-lg">{hotel.name}</div>
-														<div className="text-muted-foreground mb-1">{hotel.location}</div>
-														<div className="mb-1">{hotel.description}</div>
-														<span className="inline-block bg-success/10 text-success px-2 py-1 rounded text-xs font-medium">
-															Rating: {hotel.rating}
-														</span>
-													</div>
-												</li>
+												<div className="flex-1 text-left">
+													<div className="font-semibold text-lg">{hotel.name}</div>
+													<div className="text-muted-foreground mb-1">{hotel.location}</div>
+													<div className="mb-1">{hotel.description}</div>
+													<span className="inline-block bg-success/10 text-success px-2 py-1 rounded text-xs font-medium">
+														Rating: {hotel.rating}
+													</span>
+												</div>
+											</li>
 											))}
 										</ul>
 									</div>
@@ -218,18 +279,51 @@ const Index = () => {
 														src={stay.image}
 														alt={stay.name}
 														className="w-32 h-24 object-cover rounded-lg shadow"
+														loading="lazy"
+														onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultHotelImage }}
+													/>
+												<div className="flex-1 text-left">
+													<div className="font-semibold text-lg">{stay.name}</div>
+													<div className="text-muted-foreground mb-1">{stay.location}</div>
+													<div className="mb-1">{stay.description}</div>
+													<span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs font-medium">
+														{stay.type}
+													</span>
+												</div>
+												</li>
+											))}
+										</ul>
+									</div>
+								)}
+								{activeService === 'Holiday Packages' && (
+									<div className="bg-card rounded-xl shadow p-6">
+										<h2 className="text-xl font-bold mb-4 text-primary">Curated Holiday Packages</h2>
+										<ul className="space-y-4">
+											{holidayPackages.map((pkg, idx) => (
+												<li key={idx} className="border-b pb-4 last:border-b-0 flex flex-col md:flex-row items-center gap-6">
+													<img
+														src={pkg.image}
+														alt={pkg.name}
+														className="w-32 h-24 object-cover rounded-lg shadow"
+														loading="lazy"
+														onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultHotelImage }}
 													/>
 													<div className="flex-1 text-left">
-														<div className="font-semibold text-lg">{stay.name}</div>
-														<div className="text-muted-foreground mb-1">{stay.location}</div>
-														<div className="mb-1">{stay.description}</div>
-														<span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs font-medium">
-															{stay.type}
-														</span>
+														<div className="font-semibold text-lg">{pkg.name}</div>
+														<div className="text-muted-foreground mb-1">{pkg.location}</div>
+														<div className="mb-1">{pkg.description}</div>
 													</div>
 												</li>
 											))}
 										</ul>
+										<div className="mt-4 text-center">
+											<button
+												className="px-6 py-2 rounded bg-gradient-primary text-primary-foreground font-semibold shadow hover:bg-primary-hover transition"
+												onClick={() => navigate('/packages/results')}
+											>
+												Explore All Packages
+											</button>
+										</div>
 									</div>
 								)}
 							</div>
@@ -285,10 +379,10 @@ const Index = () => {
 							</div>
 							<p className="text-muted-foreground mb-4">Discover the incredible diversity of India through authentic experiences. From adventure tours to cultural immersions, we connect you with unforgettable journeys.</p>
 							<div className="space-y-2 text-muted-foreground text-sm">
-								<div className="flex items-center gap-2"><span>📞</span> +91 98765 43210</div>
-								<div className="flex items-center gap-2"><span>✉️</span> hello@bookkaroindia.com</div>
-								<div className="flex items-center gap-2"><span>📍</span> Mumbai, Maharashtra, India</div>
-							</div>
+                                <div className="flex items-center gap-2"><span>📞</span> +91 8756456123</div>
+                                <div className="flex items-center gap-2"><span>✉️</span> bookkaroindia@gmail.com</div>
+                                <div className="flex items-center gap-2"><span>📍</span> Mumbai, Maharashtra, India</div>
+                            </div>
 						</div>
 						<div>
 							<h4 className="font-semibold mb-3">Company</h4>

@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
+import seedRoutes from './routes/seedRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -16,6 +19,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use('/api/users', userRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/seed', seedRoutes);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../dist')));

@@ -6,6 +6,9 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Search, Users } from 'lucide-react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { toast } from '@/components/ui/sonner';
+import { defaultHotelImage } from '@/lib/assets';
 
 export default function HeroSection() {
   const travelImages = [
@@ -40,9 +43,36 @@ export default function HeroSection() {
     'Food Tours',
   ];
   const guestOptions = ['1 Guest', '2 Guests', '3-5 Guests', '6-10 Guests', '10+ Guests'];
+  const navigate = useNavigate();
+
+  const buildMockHotels = () => {
+    const loc = destination || 'Goa';
+    return [
+      {
+        _id: 'hero-mock-1',
+        name: `${loc} Experience Stay`,
+        location: loc,
+        rating: 4.6,
+        amenities: ['WiFi', 'Breakfast', 'Guide'],
+        pricePerNight: 2999,
+        roomsAvailable: 4,
+      },
+      {
+        _id: 'hero-mock-2',
+        name: `${category || 'Adventure'} Retreat`,
+        location: loc,
+        rating: 4.8,
+        amenities: ['Pool', 'Spa', 'WiFi'],
+        pricePerNight: 3899,
+        roomsAvailable: 7,
+      },
+    ];
+  };
+
   const handleSearch = () => {
-    const searchData = { destination, category, guests, date };
-    console.log('Search submitted:', searchData);
+    const results = buildMockHotels();
+    toast.success(`${results.length} options in ${destination || 'popular destinations'}`);
+    navigate('/hotels/results', { state: { results } });
   };
 
   return (
@@ -53,6 +83,7 @@ export default function HeroSection() {
           alt="Travel background"
           className="w-full h-full object-cover transition-opacity duration-1000"
           style={{ opacity: 0.7 }}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).src = defaultHotelImage }}
         />
         <div className="absolute inset-0 bg-gradient-hero" />
       </div>

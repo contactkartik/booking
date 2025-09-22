@@ -29,13 +29,13 @@ const TravelServices = ({ activeService, setActiveService }) => {
 
   return (
     <div className="bg-card rounded-t-2xl border border-border shadow-medium">
-      <div className="grid grid-cols-6 lg:grid-cols-12">
+      <div className="grid [grid-template-columns:repeat(auto-fit,minmax(110px,1fr))]">
         {services.map((service, index) => (
           <div 
             key={service.label}
             className={`relative flex flex-col items-center p-4 cursor-pointer transition-colors hover:bg-muted/50 ${
               activeService === service.label ? 'border-b-2 border-primary bg-primary/5' : ''
-            } ${index === 0 ? 'rounded-tl-2xl' : ''} ${index === 5 ? 'rounded-tr-2xl lg:rounded-tr-none' : ''} ${index === 11 ? 'lg:rounded-tr-2xl' : ''}`}
+            }`}
             onClick={() => setActiveService(service.label)}
           >
             {service.badge && (

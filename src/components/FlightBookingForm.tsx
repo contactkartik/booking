@@ -16,6 +16,10 @@ import {
   Sparkles
 } from 'lucide-react'
 import { format } from 'date-fns'
+import { toast } from '@/components/ui/sonner'
+import { api } from '@/lib/api'
+import { getAirlineLogo, defaultFlightImage } from '@/lib/assets'
+import { useNavigate } from 'react-router-dom'
 
 const FlightBookingForm = () => {
   const [tripType, setTripType] = useState('one-way')
@@ -26,8 +30,10 @@ const FlightBookingForm = () => {
   const [travellers, setTravellers] = useState('1')
   const [travelClass, setTravelClass] = useState('Economy')
   const [fareType, setFareType] = useState('regular')
+  const [results, setResults] = useState<any[]>([])
   const [isDepartureDateOpen, setIsDepartureDateOpen] = useState(false)
   const [isReturnDateOpen, setIsReturnDateOpen] = useState(false)
+  const navigate = useNavigate()
 
   const fareOptions = [
     { 
@@ -59,26 +65,72 @@ const FlightBookingForm = () => {
     }
   ]
 
+  const buildMockFlights = () => {
+    const basePrice = travelClass === 'Business' ? 9500 : 4500
+    const depart = departureDate || new Date()
+    const arrive = new Date((departureDate || new Date()).getTime() + 2.5 * 60 * 60 * 1000)
+    return [
+      {
+        _id: 'mock-1',
+        airline: 'IndiGo',
+        flightNumber: '6E-201',
+        from,
+        to,
+        departDate: depart.toISOString(),
+        arriveDate: arrive.toISOString(),
+        price: basePrice,
+        durationMinutes: 150,
+        stops: 0,
+        cabinClass: travelClass,
+        seatsLeft: 9,
+      },
+      {
+        _id: 'mock-2',
+        airline: 'Air India',
+        flightNumber: 'AI-865',
+        from,
+        to,
+        departDate: depart.toISOString(),
+        arriveDate: new Date(arrive.getTime() + 15 * 60000).toISOString(),
+        price: basePrice + 600,
+        durationMinutes: 165,
+        stops: 0,
+        cabinClass: travelClass,
+        seatsLeft: 5,
+      },
+    ]
+  }
+
   const swapLocations = () => {
     const temp = from
     setFrom(to)
     setTo(temp)
   }
 
-  const handleSearch = () => {
-    console.log('Flight search:', {
-      tripType,
-      from,
-      to,
-      departureDate,
-      returnDate,
-      travellers,
-      travelClass,
-      fareType
-    })
+  const handleSearch = async () => {
+    try {
+      const departDateStr = departureDate ? new Date(departureDate).toISOString().split('T')[0] : undefined
+      const { results } = await api.searchFlights({
+        from,
+        to,
+        departDate: departDateStr,
+        cabinClass: travelClass,
+        passengers: Number(travellers) || 1,
+      })
+      const finalResults = results && results.length > 0 ? results : buildMockFlights()
+      toast.success(`${finalResults.length} flights found`)
+      setResults(finalResults)
+      navigate('/flights/results', { state: { results: finalResults } })
+    } catch (e:any) {
+      const fallback = buildMockFlights()
+      toast.message('Showing sample results', { description: e?.message || 'Backend not reachable' })
+      setResults(fallback)
+      navigate('/flights/results', { state: { results: fallback } })
+    }
   }
 
   return (
+    <>
     <div className="bg-card rounded-b-2xl border-t-0 border border-border shadow-medium p-6">
       {/* Trip Type Selection */}
       <div className="mb-6">
@@ -313,6 +365,37 @@ const FlightBookingForm = () => {
         </div>
       </div>
     </div>
+
+    {/* Results */}
+    {results.length > 0 && (
+      <div className="mt-6 bg-card rounded-xl border border-border shadow p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">Flight Results</h3>
+          <div className="text-sm text-muted-foreground">{results.length} options</div>
+        </div>
+        <div className="space-y-3">
+          {results.map((f: any) => (
+            <div key={f._id} className="p-3 rounded-lg border border-border flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div className="flex items-center gap-3 flex-1">
+                <img src={getAirlineLogo(f.airline) || defaultFlightImage} alt={f.airline}
+                  className="h-10 w-10 object-contain rounded bg-muted/20" />
+                <div className="font-medium">{f.airline} • {f.flightNumber}</div>
+                <div className="text-sm text-muted-foreground">{f.from} → {f.to}</div>
+                <div className="text-xs text-muted-foreground">{Math.round((new Date(f.arriveDate).getTime()-new Date(f.departDate).getTime())/60000) || f.durationMinutes} mins • {f.stops || 0} stops • {f.cabinClass}</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <div className="text-xl font-bold">₹ {f.price}</div>
+                  <div className="text-xs text-muted-foreground">{f.seatsLeft || 0} seats left</div>
+                </div>
+                <Button className="bg-primary text-primary-foreground" onClick={() => navigate('/checkout', { state: { type: 'flight', item: f } })}>Book</Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    </>
   )
 }
 

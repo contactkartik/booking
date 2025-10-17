@@ -12,6 +12,8 @@ import Checkout from "./pages/Checkout";
 import Bookings from "./pages/Bookings";
 import ThankYou from "./pages/ThankYou";
 import PackagesResults from "./pages/PackagesResults";
+import AdminLoginPage from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,11 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/bookings" element={<Bookings />} />
           <Route path="/thank-you" element={<ThankYou />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

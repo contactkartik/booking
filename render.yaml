@@ -15,3 +15,14 @@ services:
     plan: free
     buildCommand: cd backend && npm install
     startCommand: cd backend && node server.js
+
+  - type: web
+    name: events-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd events-backend && npm install
+    startCommand: cd events-backend && node server.js
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://kk8923423:<pzx1YWL0D1ETxA5C>@cluster0.q0tjdyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

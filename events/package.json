@@ -1,0 +1,31 @@
+{
+  "name": "book-karo-india-events",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev -p 3020",
+    "build": "next build",
+    "start": "next start -p ${PORT:-3020}",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "framer-motion": "^11.0.0",
+    "mongoose": "^8.6.0",
+    "next": "14.2.5",
+    "next-seo": "^6.5.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "vite_react_shadcn_ts": "file:.."
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.4.5"
+  }
+}

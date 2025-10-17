@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { EVENTS_URL } from '@/lib/config'
 import { Link } from 'react-router-dom'
 import { Plane } from 'lucide-react'
 
@@ -27,6 +28,14 @@ const TravelHeader = ({ onLoginClick, onLogoutClick, user }: TravelHeaderProps) 
             <Button variant="ghost" size="sm">List Your Property</Button>
             <Button variant="ghost" size="sm">Introducing myBiz</Button>
             <Link to="/bookings"><Button variant="ghost" size="sm">My Trips</Button></Link>
+            <a
+              href={`${EVENTS_URL}?utm_source=bookkaroindia_nav`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-md bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600"
+            >
+              Event Planner
+            </a>
             {user ? (
               <>
                 <span className="font-semibold text-primary">Welcome, {user.email}</span>
@@ -44,6 +53,14 @@ const TravelHeader = ({ onLoginClick, onLogoutClick, user }: TravelHeaderProps) 
           <Link to="/bookings" className="flex-1">
             <Button variant="outline" className="w-full">My Trips</Button>
           </Link>
+          <a
+            href={`${EVENTS_URL}/book?utm_source=bookkaroindia_nav`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1"
+          >
+            <Button className="w-full bg-orange-500 hover:bg-orange-600">Event Planner</Button>
+          </a>
           {user ? (
             <div className="flex items-center gap-2">
               <span className="hidden xs:inline text-sm font-medium text-primary truncate max-w-[120px]">{user.email}</span>

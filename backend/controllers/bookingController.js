@@ -106,3 +106,12 @@ export const cancelBooking = async (req, res) => {
     res.status(500).json({ message: 'Failed to cancel booking', error: err.message });
   }
 };
+
+export const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({}).sort({ createdAt: -1 });
+    res.json({ results: bookings });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to get all bookings', error: err.message });
+  }
+};

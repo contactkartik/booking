@@ -9,6 +9,7 @@ import { setCurrentUser } from '@/lib/auth'
 import { VillaHomeSearchBar } from '@/components/VillaHomeSearchBar'
 import { useNavigate } from 'react-router-dom'
 import { defaultHotelImage, defaultFlightImage } from '@/lib/assets'
+import { EVENTS_URL } from '@/lib/config'
 
 const flightOffers = [
 	{
@@ -414,6 +415,18 @@ const Index = () => {
 								<li>Tamil Nadu</li>
 							</ul>
 						</div>
+					</div>
+					{/* Event Planner CTA */}
+					<div className="mt-8 rounded-xl border border-border p-4 text-center bg-white/60">
+						<p className="mb-3 font-semibold">Planning a Wedding or Event?</p>
+						<a
+							href={`${EVENTS_URL}?utm_source=bookkaroindia_footer`}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-block px-5 py-2 rounded-md bg-orange-500 text-white font-semibold hover:bg-orange-600"
+						>
+							Explore Event Planner
+						</a>
 					</div>
 					<div className="border-t border-border pt-8 mt-8 text-center">
 						<h4 className="font-semibold mb-2">Stay Updated</h4>

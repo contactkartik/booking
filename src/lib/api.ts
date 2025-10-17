@@ -5,6 +5,18 @@ function authHeaders() {
   return u?.token ? { Authorization: `Bearer ${u.token}` } : {};
 }
 
+async function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit & { timeoutMs?: number }) {
+  const { timeoutMs = 5000, ...rest } = init || {} as any;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(input, { ...rest, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 export const api = {
   async searchFlights(params: { from: string; to: string; departDate?: string; cabinClass?: string; passengers?: number; page?: number; limit?: number }) {
     const query = new URLSearchParams();
@@ -29,7 +41,8 @@ export const api = {
     if (params.page) query.set('page', String(params.page));
     if (params.limit) query.set('limit', String(params.limit));
 
-    const res = await fetch(`/api/search/hotels?${query.toString()}`);
+    // Use a short timeout to fallback quickly if backend is slow
+    const res = await fetchWithTimeout(`/api/search/hotels?${query.toString()}`, { timeoutMs: 3500 });
     if (!res.ok) throw new Error('Failed to search hotels');
     return res.json();
   },
@@ -55,6 +68,24 @@ export const api = {
   async cancelBooking(id: string) {
     const res = await fetch(`/api/bookings/${id}/cancel`, { method: 'PATCH', headers: { ...authHeaders() } });
     if (!res.ok) throw new Error('Failed to cancel booking');
+    return res.json();
+  },
+
+  async adminLogin(password: string) {
+    const res = await fetch('/api/users/admin-login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Admin login failed');
+    }
+    return res.json();
+  },
+
+  async getAllBookings(token: string) {
+    const res = await fetch('/api/bookings/all', { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Failed to fetch bookings');
+    }
     return res.json();
   },
 };

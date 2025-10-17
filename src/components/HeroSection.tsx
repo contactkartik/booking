@@ -8,6 +8,7 @@ import { CalendarIcon, Search, Users } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/sonner';
+import { EVENTS_URL } from '@/lib/config';
 import { defaultHotelImage } from '@/lib/assets';
 
 export default function HeroSection() {
@@ -25,6 +26,104 @@ export default function HeroSection() {
       setBgIndex((prev) => (prev + 1) % travelImages.length);
     }, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Initialize Agoda widget after component mounts
+  useEffect(() => {
+    const initializeWidget = () => {
+      if ((window as any).AgdSherpa && document.getElementById('adgshp-732420038')) {
+        try {
+          const stg: any = {};
+          stg.crt = "2614661451938";
+          stg.version = "1.04";
+          stg.id = stg.name = "adgshp-732420038";
+          stg.width = "1288px";
+          stg.height = "300px";
+          stg.ReferenceKey = "11ISUEBrEFvTidZyXID0eg==";
+          stg.Layout = "Oneline";
+          stg.Language = "en-us";
+          stg.Cid = "1950485";
+          stg.DestinationName = "";
+          stg.OverideConf = false;
+          new (window as any).AgdSherpa(stg).initialize();
+          
+          // Add styling to hide branding and ensure proper display
+          setTimeout(() => {
+            const style = document.createElement('style');
+            style.textContent = `
+              /* Hide Agoda branding */
+              #adgshp-732420038 .agd-logo,
+              #adgshp-732420038 [class*="logo"],
+              #adgshp-732420038 img[src*="agoda"],
+              #adgshp-732420038 .agd-brand,
+              #adgshp-732420038 a[href*="agoda"] {
+                display: none !important;
+              }
+              
+              /* Ensure widget fits properly */
+              #adgshp-732420038 {
+                max-width: 1288px !important;
+                margin: 0 auto !important;
+                border-radius: 0px !important;
+                overflow: hidden !important;
+              }
+              
+              /* Remove border-radius from widget content */
+              #adgshp-732420038 > div,
+              #adgshp-732420038 * {
+                border-radius: 0px !important;
+              }
+              
+              /* Center the main text content */
+              #adgshp-732420038 h1,
+              #adgshp-732420038 h2,
+              #adgshp-732420038 .agd-title,
+              #adgshp-732420038 [class*="title"],
+              #adgshp-732420038 .main-text {
+                text-align: center !important;
+                margin: 0 auto !important;
+                display: block !important;
+                width: 100% !important;
+              }
+              
+              /* Responsive adjustments */
+              @media (max-width: 1400px) {
+                #adgshp-732420038 {
+                  transform: scale(0.9) !important;
+                  transform-origin: center !important;
+                }
+              }
+              
+              @media (max-width: 1200px) {
+                #adgshp-732420038 {
+                  transform: scale(0.8) !important;
+                  transform-origin: center !important;
+                }
+              }
+              
+              @media (max-width: 768px) {
+                #adgshp-732420038 {
+                  transform: scale(0.7) !important;
+                  transform-origin: center !important;
+                }
+              }
+            `;
+            document.head.appendChild(style);
+          }, 1000);
+          
+        } catch (error) {
+          console.error('Agoda widget initialization failed:', error);
+        }
+      } else {
+        // Retry after a short delay if script isn't loaded yet
+        setTimeout(initializeWidget, 500);
+      }
+    };
+
+    // Start initialization after component mounts
+    const timer = setTimeout(initializeWidget, 100);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const [destination, setDestination] = useState('');
@@ -76,7 +175,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-[600px] flex flex-col items-center justify-center">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img
           src={travelImages[bgIndex]}
@@ -87,98 +186,41 @@ export default function HeroSection() {
         />
         <div className="absolute inset-0 bg-gradient-hero" />
       </div>
-      <div className="w-full pt-10 pb-4 text-center">
+      <div className="w-full pt-10 pb-4 text-center" style={{ marginBottom: '40px' }}>
         <h1 className="text-4xl md:text-5xl font-bold text-card-foreground mb-2 drop-shadow-lg">
           Discover Incredible <span className="text-orange-500">India</span>
         </h1>
-        <p className="text-lg text-card-foreground/80 mb-4">
+        <p className="text-lg text-card-foreground/80 mb-6">
           From ancient temples to pristine beaches, thrilling adventures to cultural immersions -<br/>
           find and book your perfect Indian experience with BookKaroIndia.
         </p>
+        <Button
+          onClick={() => navigate('/checkout')}
+          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-200"
+          aria-label="Go to booking page to enter details"
+        >
+          Start Planning Your Trip
+        </Button>
       </div>
       <div className="flex justify-center w-full">
-        <div className="bg-card/95 backdrop-blur-md rounded-2xl p-6 shadow-large border border-border/50 max-w-5xl w-full mx-4 md:mx-auto mt-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="lg:col-span-1">
-              <label className="text-sm font-medium text-card-foreground mb-2 block">Where to?</label>
-              <Input
-                placeholder="Enter destination"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className="pl-10 bg-background/50 border-border/50"
-                data-testid="input-destination"
-              />
-            </div>
-            <div className="lg:col-span-1">
-              <label className="text-sm font-medium text-card-foreground mb-2 block">Experience Type</label>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger data-testid="select-category" className="bg-background/50 border-border/50">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="lg:col-span-1">
-              <label className="text-sm font-medium text-card-foreground mb-2 block">When?</label>
-              <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-left font-normal bg-background/50 border-border/50"
-                    data-testid="button-date"
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(selectedDate) => {
-                      setDate(selectedDate);
-                      setIsCalendarOpen(false);
-                    }}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="lg:col-span-1">
-              <label className="text-sm font-medium text-card-foreground mb-2 block">Guests</label>
-              <Select value={guests} onValueChange={setGuests}>
-                <SelectTrigger data-testid="select-guests" className="bg-background/50 border-border/50">
-                  <SelectValue placeholder="How many?" />
-                </SelectTrigger>
-                <SelectContent>
-                  {guestOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      <div className="flex items-center">
-                        <Users className="mr-2 h-4 w-4" />
-                        {option}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="lg:col-span-1 flex items-end">
-              <Button
-                className="w-full bg-gradient-primary hover:bg-primary-hover text-primary-foreground"
-                onClick={handleSearch}
-                size="lg"
-                data-testid="button-search"
-              >
-                <Search className="mr-2 h-4 w-4" />
-                Search
-              </Button>
-            </div>
+        <div className="bg-card/95 backdrop-blur-md p-6 shadow-large border border-border/50 max-w-7xl w-full mx-2 md:mx-auto mt-2">
+          {/* Agoda Search Widget - Replaces the old search form */}
+          <div className="flex justify-center overflow-hidden">
+            <div 
+              id="adgshp-732420038" 
+              className="w-full mx-auto"
+              style={{
+                minHeight: '300px',
+                maxWidth: '1300px',
+                background: 'transparent',
+                overflow: 'hidden',
+                marginLeft: '10px'
+              }}
+            ></div>
           </div>
-          <div className="mt-8 text-center">
+          
+          {/* Popular searches moved below the widget */}
+          <div className="mt-6 text-center">
             <p className="text-sm text-card-foreground/80 mb-4 drop-shadow-sm">Popular searches:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {["Goa Beaches", "Kerala Backwaters", "Rajasthan Desert", "Himachal Treks", "Golden Triangle"].map((tag) => (

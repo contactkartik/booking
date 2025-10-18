@@ -21,8 +21,8 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: cd events && bun install && bun run build
-    startCommand: cd events && bun run start
+    buildCommand: cd events && npm install && npm run build
+    startCommand: cd events && npm run start
 
   - type: web
     name: events-backend

@@ -17,6 +17,14 @@ services:
     startCommand: cd backend && node server.js
 
   - type: web
+    name: events
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd events && bun install && bun run build
+    startCommand: cd events && bun run start
+
+  - type: web
     name: events-backend
     env: node
     region: oregon

@@ -1,36 +1,54 @@
 services:
   - type: static_site
     name: frontend
+    env: static
     buildCommand: bun install && bun run build
     staticPublishPath: ./dist
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    envVars:
+      - key: VITE_EVENTS_URL
+        fromService:
+          type: web
+          name: events
+          property: url
 
   - type: web
     name: backend
     env: node
     region: oregon
     plan: free
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
 
   - type: web
     name: events
     env: node
     region: oregon
     plan: free
-    buildCommand: cd events && npm install && npm run build
-    startCommand: cd events && npm run start
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
 
   - type: web
     name: events-backend
     env: node
     region: oregon
     plan: free
-    buildCommand: cd events-backend && npm install
-    startCommand: cd events-backend && node server.js
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
     envVars:
       - key: MONGO_URI
-        value: mongodb+srv://kk8923423:zbX0dEH0JxOKD4Ki@cluster0.q0tjdyf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        value: mongodb+srv://kk8923423:zbX0dEH0JxOKD4Ki@cluster0.q0tjdyf.mongodb.net/eventsdb?retryWrites=true&w=majority&appName=Cluster0
+      - key: NODE_ENV
+        value: production

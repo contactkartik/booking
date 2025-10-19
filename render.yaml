@@ -23,6 +23,9 @@ services:
     plan: free
     buildCommand: cd events && npm install && npm run build
     startCommand: cd events && npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://events-backend.onrender.com
 
   - type: web
     name: events-backend
@@ -34,3 +37,5 @@ services:
     envVars:
       - key: MONGO_URI
         value: mongodb+srv://kk8923423:zbX0dEH0JxOKD4Ki@cluster0.q0tjdyf.mongodb.net/eventsdb?retryWrites=true&w=majority&appName=Cluster0
+      - key: CORS_ORIGINS
+        value: https://events.onrender.com,https://events-backend.onrender.com

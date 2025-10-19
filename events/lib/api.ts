@@ -1,4 +1,4 @@
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8081'
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8080'
 
 export async function postJSON<T>(path: string, data: any) : Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), cache: 'no-store' })

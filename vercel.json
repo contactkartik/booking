@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://booking-1-doqz.onrender.com/api/$1"
+      "destination": "https://events-backend-kappa.vercel.app/api/$1"
     },
     {
       "source": "/(.*)",

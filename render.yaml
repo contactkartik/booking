@@ -5,7 +5,7 @@ services:
     staticPublishPath: ./dist
     envVars:
       - key: VITE_EVENTS_URL
-        value: https://booking-12.onrender.com  # Replace with actual events service URL
+        value: https://booking-12.onrender.com
     routes:
       - type: rewrite
         source: /*

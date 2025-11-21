@@ -32,9 +32,23 @@ if(!MONGO_URI) {
   try {
     console.log('Attempting to connect to MongoDB...')
     await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 5000
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
     })
     console.log('✅ Successfully connected to MongoDB')
+    
+    // Handle connection errors after initial connection
+    mongoose.connection.on('error', (err) => {
+      console.error('❌ MongoDB runtime error:', err.message)
+    })
+    
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️  MongoDB disconnected')
+    })
+    
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB reconnected')
+    })
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message)
     console.error('Full error details:', err)
@@ -152,14 +166,24 @@ const transporter = nodemailer.createTransport({
 })
 
 // Routes
-app.get('/api/health', (req,res)=> res.json({ ok:true }))
+app.get('/api/health', (req,res)=> {
+  console.log('Health check requested')
+  res.json({ 
+    ok: true, 
+    mongodb: !useMemoryStore ? 'connected' : 'using-memory-store',
+    timestamp: new Date().toISOString()
+  })
+})
 
 app.post('/api/bookings', async (req,res)=>{
   try{
+    console.log('📝 Booking request received:', req.body)
     const { name, email, phone, date, package: pkg, message } = req.body
     const doc = await saveBookingDoc({ name, email, phone, date, package: pkg, message })
+    console.log('✅ Booking saved:', doc._id)
     res.json({ success: true, id: doc._id })
   }catch(err){
+    console.error('❌ Booking error:', err.message)
     res.status(400).json({ error: err.message })
   }
 })
@@ -188,6 +212,8 @@ app.post('/api/contact', async (req,res)=>{
 })
 
 const PORT = process.env.PORT || 8080
-app.listen(PORT, ()=>{
-  console.log('Events backend running on', PORT)
+app.listen(PORT, '0.0.0.0', ()=>{
+  console.log('🚀 Events backend running on port', PORT)
+  console.log('📊 Database status:', useMemoryStore ? 'In-Memory Store' : 'MongoDB Connected')
+  console.log('🌐 CORS origins:', origins)
 })

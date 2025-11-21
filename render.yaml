@@ -30,7 +30,7 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_BASE
-        value: https://events-backend.onrender.com
+        value: https://booking-5-jtsr.onrender.com
       - key: NODE_ENV
         value: production
 

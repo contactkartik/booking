@@ -30,7 +30,7 @@ services:
     startCommand: npm start
     envVars:
       - key: NEXT_PUBLIC_API_BASE
-        value: https://booking-8.onrender.com
+        value: https://events-backend.onrender.com
       - key: NODE_ENV
         value: production
 
@@ -46,4 +46,4 @@ services:
       - key: MONGO_URI
         value: mongodb+srv://kk8923423:zbX0dEH0JxOKD4Ki@cluster0.q0tjdyf.mongodb.net/eventsdb?retryWrites=true&w=majority&appName=Cluster0
       - key: CORS_ORIGINS
-        value: https://booking-12.onrender.com, http://localhost:3000, http://localhost:5173
+        value: https://booking-12.onrender.com, https://events.onrender.com, http://localhost:3000, http://localhost:5173

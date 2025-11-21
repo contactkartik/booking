@@ -7,6 +7,8 @@
 
 ### 2. Render.yaml Configuration
 ✅ Updated service configuration with proper structure.
+✅ Added `rootDirectory` property for each service (required for monorepo deployments).
+✅ Removed `cd` commands from build/start commands.
 
 ## Required Manual Steps
 
@@ -68,6 +70,137 @@ For each service, verify in Render dashboard:
 1. Ensure all dependencies are in package.json (not just devDependencies)
 2. Check build logs for specific errors
 3. Verify Node version compatibility
+
+### Issue: Port Binding
+**Solution:** Use `$PORT` environment variable in start command.
+
+## Deployment Fix for Render - Port Binding Issue
+
+## Issue
+The Next.js events service deployment is failing with:
+```
+==> Port scan timeout reached, no open ports detected. 
+Bind your service to at least one port.
+```
+
+## Root Cause Analysis
+
+The error occurs because Render expects web services to:
+1. **Complete the build** (✓ Working - Next.js builds successfully)
+2. **Start a server** that binds to the `PORT` environment variable
+3. **Respond to health checks** on that port
+
+The issue was in the `package.json` start script using `${PORT:-3020}` syntax, which doesn't work correctly in npm scripts on Render's environment.
+
+## Solution Applied
+
+### Fixed: events/package.json
+Changed the start command to properly use Render's PORT variable:
+```json
+"scripts": {
+  "start": "next start -p $PORT"
+}
+```
+**Why this works:**
+- Render automatically sets the `PORT` environment variable
+- Next.js `next start` command needs to bind to this port
+- The `-p $PORT` flag tells Next.js to use Render's assigned port
+- No fallback needed - Render always provides PORT
+
+## Current Configuration
+
+### render.yaml (events service)
+```yaml
+- type: web
+  name: events
+  env: node
+  region: oregon
+  plan: free
+  rootDirectory: events
+  buildCommand: npm ci && npm run build
+  startCommand: npm start
+  envVars:
+    - key: NEXT_PUBLIC_API_BASE
+      value: https://booking-8.onrender.com
+    - key: NODE_ENV
+      value: production
+```
+
+### next.config.js
+```javascript
+const nextConfig = {
+  reactStrictMode: true,
+  output: 'standalone',  // Correct for Render deployment
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' }
+    ]
+  }
+};
+```
+
+## Deployment Steps
+
+1. **Commit the fix:**
+   ```bash
+   git add events/package.json
+   git commit -m "fix: Update Next.js start command for Render port binding"
+   git push origin master
+   ```
+
+2. **Render will auto-deploy:**
+   - Build phase: `npm ci && npm run build` 
+   - Start phase: `npm start` (runs `next start -p $PORT`)
+   - Server binds to Render's PORT
+   - Health check passes 
+
+## Expected Deployment Flow
+
+```
+==> Building...
+Compiled successfully
+Generating static pages
+Build successful
+
+==> Deploying...
+==> Running 'npm start'
+> next start -p 10000
+Ready on http://0.0.0.0:10000
+==> Port 10000 detected
+==> Service is live
+```
+
+## Verification Checklist
+
+After deployment succeeds:
+- [ ] Build logs show "Build successful "
+- [ ] Deploy logs show "Ready on http://0.0.0.0:[PORT]"
+- [ ] Service status shows "Live" (green)
+- [ ] Health check endpoint responds
+- [ ] Application is accessible at the Render URL
+
+## Additional Notes
+
+### Other Services Status
+- **frontend** (static site): Vite app - deploys to `/dist`
+- **backend**: Node.js API server
+- **events-backend**: Express server with MongoDB
+
+### Common Render Deployment Issues
+1. **Port binding**: Always use `$PORT` environment variable
+2. **Build vs Start**: Build creates artifacts, Start runs the server
+3. **Health checks**: Render pings your app to verify it's running
+4. **Timeouts**: Free tier has 15-minute build timeout
+
+## Troubleshooting
+
+If deployment still fails:
+
+1. **Check build logs** for compilation errors
+2. **Verify PORT usage** in start command
+3. **Test locally** with: `PORT=3000 npm start`
+4. **Check Render dashboard** for service-specific errors
+5. **Review environment variables** in Render dashboard
 
 ## Vercel Deployment (Frontend Only)
 

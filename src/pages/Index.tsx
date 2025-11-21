@@ -212,8 +212,18 @@ const Index = () => {
 											onClick={() => navigate('/packages/results')}
 										>
 											Explore Packages
-										</button>
-									</div>
+                                        </button>
+                                        <div className="mt-3">
+                                          <a
+                                            href={EVENTS_URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block px-6 py-2 rounded bg-secondary text-secondary-foreground font-semibold shadow hover:opacity-90 transition"
+                                          >
+                                            Visit Events Site
+                                          </a>
+                                        </div>
+                                    </div>
 								</div>
 							)}
 						{/* Explore More Section */}

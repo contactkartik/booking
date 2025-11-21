@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar'
 import { getJSON } from '@/lib/api'
+import Link from 'next/link'
 
 type Pkg = { _id: string; name: string; price: number; currency?: string; features?: string[] }
 
@@ -25,7 +26,7 @@ export default async function PackagesPage(){
                 <ul className="mt-4 space-y-2 text-sm text-neutral-700 list-disc pl-5">
                   {(p.features||[]).map(f=> <li key={f}>{f}</li>)}
                 </ul>
-                <a href="/book" className="bk-btn mt-6">Choose {p.name}</a>
+                <Link href="/book" className="bk-btn mt-6">Choose {p.name}</Link>
               </div>
             ))}
           </div>

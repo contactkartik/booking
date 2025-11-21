@@ -1,5 +1,5 @@
 const envUrl = (import.meta as any)?.env?.VITE_EVENTS_URL as string | undefined
-let runtimeDefault = 'https://events.bookkaroindia.com'
+let runtimeDefault = 'https://booking-12.onrender.com'
 if (typeof window !== 'undefined') {
   const host = window.location.hostname
   if (host === 'localhost' || host === '127.0.0.1') {

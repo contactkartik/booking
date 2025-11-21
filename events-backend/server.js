@@ -14,6 +14,9 @@ const origins = (process.env.CORS_ORIGINS || '').split(',').map(s=>s.trim()).fil
 app.use(cors({ origin: function(origin, cb){
   if(!origin) return cb(null, true)
   if(origins.includes(origin)) return cb(null, true)
+  // Allow all Render.com domains for now
+  if(origin && origin.includes('.onrender.com')) return cb(null, true)
+  console.warn('❌ CORS blocked:', origin)
   return cb(null, false)
 }, credentials: false }))
 

@@ -38,7 +38,7 @@ export default function BookingForm(){
         </select>
         <input name="message" placeholder="Message (optional)" className="border rounded-md px-3 py-2"/>
       </div>
-      <button disabled={loading} className="bk-btn">{loading? 'Submitting...' : 'Submit Booking'}</button>
+      <button disabled={loading} className="bk-btn px-4 py-2 text-sm w-auto max-w-xs">{loading? 'Submitting...' : 'Submit Booking'}</button>
       {success && <p className="text-green-600 text-sm">{success}</p>}
       {error && <p className="text-red-600 text-sm">{error}</p>}
     </form>

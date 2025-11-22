@@ -24,9 +24,9 @@ const logos = ["https://dummyimage.com/120x40/000/fff&text=Logo", "https://dummy
 export default function RecentWorks() {
   return (
     <section className="relative">
-      <div className="bk-container grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
+      <div className="bk-container grid lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10">
         <div>
-          <div className="text-[42px] sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-neutral-900">
+          <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-neutral-900">
             <span className="block">Recent</span>
             <span className="block text-brand-600">Works</span>
           </div>
@@ -43,7 +43,7 @@ export default function RecentWorks() {
               >
                 <div className="p-6">
                   <h3 className="text-xl font-semibold">{w.title}</h3>
-                  <p className="mt-2 text-neutral-700 text-sm sm:text-base">{w.blurb}</p>
+                  <p className="mt-2 text-neutral-700 text-xs sm:text-sm md:text-base">{w.blurb}</p>
                   <div className="mt-4">
                     <Link href="#" className="bk-link">{w.cta}</Link>
                   </div>

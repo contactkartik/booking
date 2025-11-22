@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { postJSON } from '@/lib/api'
 
 export default function ContactPage(){
+  const mainUrl = (process.env.NEXT_PUBLIC_MAIN_URL || 'https://bookkaroindia.com').replace(/\/$/, '')
   const [loading, setLoading] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
@@ -27,7 +28,7 @@ export default function ContactPage(){
           <div>
             <h1 className="section-title">Contact Us</h1>
             <p className="section-sub">Phone: +91 8756456123 · Email: hello@bookkaroindia.com · Address: Pan-India</p>
-            <p className="mt-6 text-sm text-neutral-600">Back to <a className="bk-link" href="https://www.bookkaroindia.com">BookKaroIndia.com</a></p>
+            <p className="mt-6 text-sm text-neutral-600">Back to <a className="bk-link" href={mainUrl}>BookKaroIndia.com</a></p>
           </div>
           <div className="rounded-xl border bg-white p-6">
             <form onSubmit={onSubmit} className="grid gap-4">

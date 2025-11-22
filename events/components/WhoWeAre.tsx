@@ -28,18 +28,18 @@ const features = [
 export default function WhoWeAre() {
   return (
     <section className="relative bg-brand-50/40">
-      <div className="bk-container grid lg:grid-cols-[0.6fr_1.4fr] gap-10 items-start">
+      <div className="bk-container grid lg:grid-cols-[0.6fr_1.4fr] gap-8 lg:gap-10 items-start">
         <motion.div initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true}} transition={{duration:0.6}}>
-          <div className="text-brand-400 font-black text-6xl sm:text-7xl lg:text-[96px] leading-none select-none">
+          <div className="text-brand-400 font-black text-5xl sm:text-6xl md:text-7xl lg:text-[96px] leading-none select-none">
             Who
             <span className="block -mt-2">Are We?</span>
           </div>
-          <p className="mt-6 text-neutral-700 max-w-md">
+          <p className="mt-4 sm:mt-6 text-sm sm:text-base text-neutral-700 max-w-md">
             We design and deliver stress‑free, unforgettable events. From intimate
             gatherings to large celebrations, we go beyond the brief for seamless
             execution.
           </p>
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <Link href="/about" className="bk-btn">More About Us</Link>
           </div>
         </motion.div>

@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[80vh] lg:min-h-[90vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-[90vh] flex items-center overflow-hidden">
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center"
         style={{
@@ -15,7 +15,7 @@ export default function Hero() {
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
 
-      <div className="bk-container grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+      <div className="bk-container grid lg:grid-cols-[1.1fr_0.9fr] gap-6 sm:gap-8 lg:gap-10 items-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -23,16 +23,16 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
           className="text-brand-300"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
             <span className="text-brand-300 italic">Stress‑Free</span> Event
             <br /> Planning, Flawlessly
             <br /> Executed!
           </h1>
-          <p className="mt-4 max-w-2xl">
+          <p className="mt-3 sm:mt-4 max-w-2xl text-sm sm:text-base">
             From concept to celebration, we handle every detail so you can enjoy
             what truly matters.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-wrap gap-3">
             <Link href="/book" className="bk-btn bg-brand-400 hover:bg-brand-500">
               Book Your Event Now
             </Link>
@@ -47,7 +47,7 @@ export default function Hero() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="bg-white/90 backdrop-blur rounded-2xl shadow-xl overflow-hidden"
+          className="hidden lg:block bg-white/90 backdrop-blur rounded-2xl shadow-xl overflow-hidden"
         >
           <div className="aspect-[16/9] w-full bg-cover bg-center" style={{
             backgroundImage:

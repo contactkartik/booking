@@ -186,24 +186,24 @@ export default function HeroSection() {
         />
         <div className="absolute inset-0 bg-gradient-hero" />
       </div>
-      <div className="w-full pt-10 pb-4 text-center" style={{ marginBottom: '40px' }}>
-        <h1 className="text-4xl md:text-5xl font-bold text-card-foreground mb-2 drop-shadow-lg">
+      <div className="w-full pt-6 sm:pt-8 md:pt-10 pb-3 sm:pb-4 text-center" style={{ marginBottom: '30px' }}>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-card-foreground mb-2 drop-shadow-lg px-2">
           Discover Incredible <span className="text-orange-500">India</span>
         </h1>
-        <p className="text-lg text-card-foreground/80 mb-6">
+        <p className="text-sm sm:text-base md:text-lg text-card-foreground/80 mb-4 sm:mb-6 px-4">
           From ancient temples to pristine beaches, thrilling adventures to cultural immersions -<br/>
           find and book your perfect Indian experience with BookKaroIndia.
         </p>
         <Button
           onClick={() => navigate('/checkout')}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-200"
+          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 sm:py-3 px-5 sm:px-6 text-sm sm:text-base rounded-lg shadow-lg transition-all duration-200"
           aria-label="Go to booking page to enter details"
         >
           Start Planning Your Trip
         </Button>
       </div>
       <div className="flex justify-center w-full">
-        <div className="bg-card/95 backdrop-blur-md p-6 shadow-large border border-border/50 max-w-7xl w-full mx-2 md:mx-auto mt-2">
+        <div className="bg-card/95 backdrop-blur-md p-3 sm:p-4 md:p-6 shadow-large border border-border/50 max-w-7xl w-full mx-2 md:mx-auto mt-2">
           {/* Agoda Search Widget - Replaces the old search form */}
           <div className="flex justify-center overflow-hidden">
             <div 
@@ -220,9 +220,9 @@ export default function HeroSection() {
           </div>
           
           {/* Popular searches moved below the widget */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-card-foreground/80 mb-4 drop-shadow-sm">Popular searches:</p>
-            <div className="flex flex-wrap justify-center gap-2">
+          <div className="mt-4 sm:mt-6 text-center">
+            <p className="text-xs sm:text-sm text-card-foreground/80 mb-3 sm:mb-4 drop-shadow-sm">Popular searches:</p>
+            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
               {["Goa Beaches", "Kerala Backwaters", "Rajasthan Desert", "Himachal Treks", "Golden Triangle"].map((tag) => (
                 <Button
                   key={tag}

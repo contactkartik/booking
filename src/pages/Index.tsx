@@ -184,7 +184,7 @@ const Index = () => {
 							 user={user} 
 						/>
 						 <HeroSection />
-			<section className="bg-gradient-to-br from-background to-muted/30 py-8">
+			<section className="bg-gradient-to-br from-background to-muted/30 py-4 sm:py-6 md:py-8">
 				<div className="container mx-auto px-4">
 					<div className="max-w-6xl mx-auto">
 						<TravelServices activeService={activeService} setActiveService={setActiveService} />
@@ -352,40 +352,40 @@ const Index = () => {
 				</div>
 			</section>
 			{/* Why Choose BookKaroIndia Section */}
-			<section className="bg-background py-16 mt-12">
-				<div className="container mx-auto px-4">
-					<h2 className="text-3xl font-bold text-center mb-12">Why Choose BookKaroIndia?</h2>
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+			<section className="bg-background py-8 sm:py-12 md:py-16 mt-8 sm:mt-10 md:mt-12">
+				<div className="container mx-auto px-3 sm:px-4">
+					<h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-10 md:mb-12">Why Choose BookKaroIndia?</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 text-center">
 						<div>
 							<div className="flex justify-center mb-4">
 								<span className="text-5xl">✅</span>
 							</div>
-							<h3 className="text-xl font-semibold mb-2">Verified Experiences</h3>
+							<h3 className="text-lg sm:text-xl font-semibold mb-2">Verified Experiences</h3>
 							<p className="text-muted-foreground">All our experiences are verified and reviewed by our quality team</p>
 						</div>
 						<div>
 							<div className="flex justify-center mb-4">
 								<span className="text-5xl">👥</span>
 							</div>
-							<h3 className="text-xl font-semibold mb-2">Local Experts</h3>
+							<h3 className="text-lg sm:text-xl font-semibold mb-2">Local Experts</h3>
 							<p className="text-muted-foreground">Connect with authentic local guides who know the real India</p>
 						</div>
 						<div>
 							<div className="flex justify-center mb-4">
 								<span className="text-5xl">💰</span>
 							</div>
-							<h3 className="text-xl font-semibold mb-2">Best Price Guarantee</h3>
+							<h3 className="text-lg sm:text-xl font-semibold mb-2">Best Price Guarantee</h3>
 							<p className="text-muted-foreground">We guarantee the best prices with no hidden fees or charges</p>
 						</div>
 					</div>
 				</div>
 			</section>
 			{/* Main Footer Section */}
-			<footer className="bg-card border-t border-border pt-12 pb-4 mt-0">
-				<div className="container mx-auto px-4">
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+			<footer className="bg-card border-t border-border pt-8 sm:pt-10 md:pt-12 pb-4 mt-0">
+				<div className="container mx-auto px-3 sm:px-4">
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
 						<div>
-							<div className="text-2xl font-bold mb-2">
+							<div className="text-xl sm:text-2xl font-bold mb-2">
 								<span className="font-bold" style={{ color: '#ff8800' }}>BookKaro</span><span className="font-bold text-black">India</span>
 							</div>
 							<p className="text-muted-foreground mb-4">Discover the incredible diversity of India through authentic experiences. From adventure tours to cultural immersions, we connect you with unforgettable journeys.</p>
@@ -427,23 +427,23 @@ const Index = () => {
 						</div>
 					</div>
 					{/* Event Planner CTA */}
-					<div className="mt-8 rounded-xl border border-border p-4 text-center bg-white/60">
-						<p className="mb-3 font-semibold">Planning a Wedding or Event?</p>
+					<div className="mt-6 sm:mt-8 rounded-xl border border-border p-3 sm:p-4 text-center bg-white/60">
+						<p className="mb-3 text-sm sm:text-base font-semibold">Planning a Wedding or Event?</p>
 						<a
 							href={`${EVENTS_URL}?utm_source=bookkaroindia_footer`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="inline-block px-5 py-2 rounded-md bg-orange-500 text-white font-semibold hover:bg-orange-600"
+							className="inline-block px-4 sm:px-5 py-2 text-sm sm:text-base rounded-md bg-orange-500 text-white font-semibold hover:bg-orange-600"
 						>
 							Explore Event Planner
 						</a>
 					</div>
-					<div className="border-t border-border pt-8 mt-8 text-center">
-						<h4 className="font-semibold mb-2">Stay Updated</h4>
-						<p className="text-muted-foreground mb-4">Get the latest travel deals and destination guides delivered to your inbox.</p>
-						<form className="flex justify-center items-center gap-2 max-w-md mx-auto mb-4">
-							<input type="email" placeholder="Enter your email" className="border border-border rounded px-4 py-2 w-full" />
-							<button type="submit" className="bg-primary text-white px-4 py-2 rounded font-semibold">Subscribe</button>
+					<div className="border-t border-border pt-6 sm:pt-8 mt-6 sm:mt-8 text-center">
+						<h4 className="font-semibold mb-2 text-sm sm:text-base">Stay Updated</h4>
+						<p className="text-muted-foreground mb-3 sm:mb-4 text-xs sm:text-sm px-4">Get the latest travel deals and destination guides delivered to your inbox.</p>
+						<form className="flex flex-col sm:flex-row justify-center items-center gap-2 max-w-md mx-auto mb-4 px-4">
+							<input type="email" placeholder="Enter your email" className="border border-border rounded px-3 sm:px-4 py-2 w-full text-sm" />
+							<button type="submit" className="bg-primary text-white px-4 py-2 rounded font-semibold text-sm w-full sm:w-auto">Subscribe</button>
 						</form>
 						<div className="flex justify-center gap-6 text-2xl text-muted-foreground mb-4">
 							<span>📘</span>
@@ -451,7 +451,7 @@ const Index = () => {
 							<span>📸</span>
 							<span>▶️</span>
 						</div>
-						<div className="flex justify-center gap-6 text-sm text-muted-foreground mb-2">
+						<div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-foreground mb-2">
 							<span>Privacy Policy</span>
 							<span>Terms of Service</span>
 						</div>

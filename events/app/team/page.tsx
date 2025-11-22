@@ -3,8 +3,7 @@ import Navbar from '@/components/Navbar'
 const team = [
   { name: 'Rithik Kumar', role: 'Founder & Lead Planner' },
   { name: 'Kishan Sirvastava', role: 'Founder & Creative Head' },
-  { name: 'Gyani', role: 'Client & Vendor Manager' },
-  { name: 'Anjali', role: 'Ops & Logistics Manager' }
+  { name: 'Sumit', role: 'Digital Marketing Manager' }
 ]
 
 export default function TeamPage(){
